@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Randomised Fractal Snowflakes</title>
+    <style>
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+      const canvas = document.getElementById('canvas')
+      const context = canvas.getContext('2d')
+
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      context.translate(canvas.width / 2, canvas.height / 2)
+      context.lineWidth = 1
+      context.strokeStyle = '#fff'
+
+      const maxLevel = 3
+      const branchs = 3
+      const sides = Math.floor(Math.random() * 7 + 3)
+      const spread = Math.random() * 0.48 + 0.51
+      const lineLength = Math.random() * 500 + 200
+      const angle = Math.PI * 2 * spread // 0.51 - 0.99
+
+      function drawLine(level) {
+        if (level > maxLevel) {
+          return
+        }
+
+        context.beginPath()
+        context.moveTo(0, 0)
+        context.lineTo(lineLength, 0)
+        context.stroke()
+
+        for (let i = 0; i < branchs; i++) {
+          context.save()
+          context.translate((lineLength * i) / branchs, 0)
+          context.scale(0.5, 0.5)
+
+          context.save()
+          context.rotate(angle)
+          drawLine(level + 1)
+          context.restore()
+
+          context.save()
+          context.rotate(-angle)
+          drawLine(level + 1)
+          context.restore()
+
+          context.restore()
+        }
+      }
+
+      for (let i = 0; i < sides; i++) {
+        drawLine(0)
+        context.rotate((Math.PI * 2) / sides)
+      }
+    </script>
+  </body>
+</html>
